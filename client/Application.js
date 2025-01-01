@@ -14,7 +14,7 @@ import { checkLoginState } from './reducer/modules/user';
 import { requireAuthentication } from './components/AuthenticatedComponent';
 import Notify from './components/Notify/Notify';
 
-const plugin = require('client/plugin.js');
+import plugin from 'client/plugin.js';
 
 const LOADING_STATUS = 0;
 

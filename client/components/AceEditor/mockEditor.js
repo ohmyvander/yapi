@@ -194,4 +194,4 @@ function run(options) {
       }
     })
  */
-module.exports = run;
+export default run;

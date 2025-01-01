@@ -304,4 +304,4 @@ Object.keys(pluginModuleList).forEach(plugin => {
   }
 });
 
-module.exports = pluginModule;
+export default pluginModule;

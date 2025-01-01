@@ -35,7 +35,7 @@ const {
   checkNameIsExistInArray
 } = require('common/postmanLib.js');
 
-const plugin = require('client/plugin.js');
+import plugin from 'client/plugin.js';
 
 const createContext = require('common/createContext')
 

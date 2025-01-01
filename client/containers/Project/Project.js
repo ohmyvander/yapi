@@ -12,7 +12,7 @@ import Setting from './Setting/Setting.js';
 import Loading from '../../components/Loading/Loading';
 import ProjectMember from './Setting/ProjectMember/ProjectMember.js';
 import ProjectData from './Setting/ProjectData/ProjectData.js';
-const plugin = require('client/plugin.js');
+import plugin from 'client/plugin.js';
 @connect(
   state => {
     return {

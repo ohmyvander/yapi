@@ -25,7 +25,7 @@ import { initCrossRequest } from 'client/components/Postman/CheckCrossInstall.js
 import produce from 'immer';
 import {InsertCodeMap} from 'client/components/Postman/Postman.js'
 
-const plugin = require('client/plugin.js');
+import plugin from 'client/plugin.js';
 const {
   handleParams,
   crossRequest,
