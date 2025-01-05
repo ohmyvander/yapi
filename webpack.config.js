@@ -1,19 +1,15 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const AssetsWebpackPlugin = require('assets-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const commonLib = require('./common/plugin.js');
 const packageJson = require('./package.json');
 const yapi = require('./server/yapi');
 
-const assetsPluginInstance = new AssetsWebpackPlugin({
-  filename: 'static/prd/assets.json',
-  processOutput: function(assets) {
-    return 'window.WEBPACK_ASSETS = ' + JSON.stringify(assets);
-  }
-});
 var compressPlugin = new CompressionWebpackPlugin({
   asset: '[path].gz[query]',
   algorithm: 'gzip',
@@ -65,14 +61,13 @@ const webpackConfig = {
   mode: process.env.NODE_ENV,
   entry: path.resolve(__dirname, './client/index.js'),
   output: {
-    path: path.resolve(__dirname, './static/prd'),
-    publicPath: '',
-    filename: 'app.js',
-    // filename: '[name]@[chunkhash].js',
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/',
+    // filename: 'app.js',
+    filename: '[name].[contenthash:8].js',
     clean: true
   },
-  context: path.resolve(__dirname, './client'),
-  devtool: 'cheap-module-source-map',
+  // context: path.resolve(__dirname, './client'),
   resolve: {
     alias: {
       client: path.resolve(__dirname, './client'),
@@ -111,7 +106,7 @@ const webpackConfig = {
               ["@babel/plugin-proposal-decorators", { legacy: true }],
               // 因为工程用了很多 commonjs 写法的库，所以要加这个插件，打包时把 es6 语法转为 commonjs
               // 上面 sourceType 加了感觉没什么用
-              ['@babel/plugin-transform-modules-commonjs']
+              ['@babel/plugin-transform-modules-commonjs'],
             ]
           }
         }]
@@ -143,9 +138,19 @@ const webpackConfig = {
       'process.env.version': JSON.stringify(packageJson.version),
       'process.env.versionNotify': yapi.WEBCONFIG.versionNotify
     }),
-    assetsPluginInstance,
     compressPlugin,
-    new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn|en-gb)$/)
+    new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn|en-gb)$/),
+    new CopyWebpackPlugin({
+      patterns: [
+        { context: 'static/', from: "**/*" },
+      ],
+    }),
+    new HtmlWebpackPlugin({
+      template: './client/index.html',
+      filename: 'index.html',
+    }),
+    // 查看打包各个模块大小
+    // new BundleAnalyzerPlugin(),
   ],
   optimization: {
     minimize: true,
@@ -158,7 +163,41 @@ const webpackConfig = {
           }
         }
       })
-    ]
+    ],
+    splitChunks: {
+      // chunks、minSize、minChunks 将对所有缓存组生效
+      chunks: 'all', // 对所有的chunk进行拆分 
+      minSize: 20000, // 拆分 chunk 的最小体积 20000 bytes
+      minChunks: 2, // 需在两个模块中共享才进行拆分
+      cacheGroups: {
+        vendor: {
+          name: 'vendor', // chunk 的名称 vendor
+          test: /[\\/]node_modules[\\/]/i,  // 匹配node_modules下所有的chunk
+          priority: 10, // 优先级10 优先将node_modules下的chunk拆分到vendor组
+          reuseExistingChunk: true, // 重用模块，而不是重新生成
+          enforce: true, // 强制拆分
+        },
+        default: {  // 默认组 非node_modules下的文件块 将执行default缓存组规则
+          reuseExistingChunk: true,
+          priority: -10, // 优先级 -10 
+          enforce: true, // 强制拆分
+        },
+        react: { // react组
+          name: 'react',
+          test: /[\\/]node_modules[\\/]react[\\/]/, // 匹配node_modules下的react库
+          priority: 20, // 优先级20 优先将node_modules下的react拆分出去
+          minChunks: 2,
+          reuseExistingChunk: true,
+        },
+        antd: { // antd组
+          name: 'antd',
+          test: /[\\/]node_modules[\\/]antd[\\/]/,  // 匹配node_modules下的antd库
+          priority: 20, // 优先级20 优先将node_modules下的antd拆分出去
+          minChunks: 2,
+          reuseExistingChunk: true, // 重用模块，而不是重新生成
+        },
+      }
+    }
   }
 };
 
@@ -166,12 +205,25 @@ if (process.env.NODE_ENV === 'development') {
   Object.assign(webpackConfig, {
     devtool: 'inline-source-map',
     devServer: {
-      static: path.join(__dirname, './static'),
+      static: [
+        path.join(__dirname, './dist'),
+      ],
       hot: true,
       historyApiFallback: true,
-      compress: true
+      compress: true,
+      proxy: [
+        {
+          context: ['/api'],
+          target: 'http://127.0.0.1:3000',
+        },
+      ],
     }
   })
 }
 
-module.exports = webpackConfig;
+// module.exports = webpackConfig;
+
+// 打包耗时分析
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+const speedMeasurePlugin = new SpeedMeasurePlugin();
+module.exports = speedMeasurePlugin.wrap(webpackConfig);
