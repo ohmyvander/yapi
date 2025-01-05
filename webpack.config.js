@@ -5,18 +5,12 @@ const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin');
 // const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const commonLib = require('./common/plugin.js');
 const packageJson = require('./package.json');
 const yapi = require('./server/yapi');
-
-var compressPlugin = new CompressionWebpackPlugin({
-  asset: '[path].gz[query]',
-  algorithm: 'gzip',
-  test: /\.(js|css)$/,
-  threshold: 10240,
-  minRatio: 0.8
-});
 
 function createScript(plugin, pathAlias) {
   let options = plugin.options ? JSON.stringify(plugin.options) : null;
@@ -113,15 +107,15 @@ const webpackConfig = {
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"]
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
         test: /\.less$/,
-        use: ['style-loader', 'css-loader', 'less-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
       },
       {
         test: /\.(sass|scss)$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
       {
         test: /.(gif|jpg|jpeg|png|woff|woff2|eot|ttf|svg)$/,
@@ -138,7 +132,16 @@ const webpackConfig = {
       'process.env.version': JSON.stringify(packageJson.version),
       'process.env.versionNotify': yapi.WEBCONFIG.versionNotify
     }),
-    compressPlugin,
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash:8].css',
+    }),
+    new CompressionWebpackPlugin({
+      asset: '[path].gz[query]',
+      algorithm: 'gzip',
+      test: /\.(js|css)$/,
+      threshold: 10240,
+      minRatio: 0.8
+    }),
     new webpack.ContextReplacementPlugin(/moment[\\\/]locale$/, /^\.\/(zh-cn|en-gb)$/),
     new CopyWebpackPlugin({
       patterns: [
@@ -162,7 +165,8 @@ const webpackConfig = {
             comments: false
           }
         }
-      })
+      }),
+      new CssMinimizerWebpackPlugin(),
     ],
     splitChunks: {
       // chunks、minSize、minChunks 将对所有缓存组生效
@@ -223,7 +227,14 @@ if (process.env.NODE_ENV === 'development') {
 
 // module.exports = webpackConfig;
 
-// 打包耗时分析
+// 打包耗时分析，与 MiniCssExtractPlugin 冲突，必须使用如下写法才能解决
+// 参考 https://github.com/stephencookdev/speed-measure-webpack-plugin/issues/167#issuecomment-1318684127
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const speedMeasurePlugin = new SpeedMeasurePlugin();
-module.exports = speedMeasurePlugin.wrap(webpackConfig);
+const cssPluginIndex = webpackConfig.plugins.findIndex(
+  (e) => e.constructor.name === 'MiniCssExtractPlugin'
+);
+const cssPlugin = webpackConfig.plugins[cssPluginIndex];
+const configToExport = speedMeasurePlugin.wrap(webpackConfig);
+configToExport.plugins[cssPluginIndex] = cssPlugin;
+module.exports = configToExport;
