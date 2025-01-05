@@ -4,10 +4,10 @@ import './Loading.scss';
 
 export default class Loading extends React.PureComponent {
   static defaultProps = {
-    visible: false
+    visible: false,
   };
   static propTypes = {
-    visible: PropTypes.bool
+    visible: PropTypes.bool,
   };
   constructor(props) {
     super(props);
