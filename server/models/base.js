@@ -1,25 +1,13 @@
 const yapi = require('../yapi.js');
-const mongoose = require('mongoose');
-const autoIncrement = require('../utils/mongoose-auto-increment');
 
 /**
- * 所有的model都需要继承baseModel, 且需要 getSchema和getName方法，不然会报错
+ * All models inherit this base class and expose getSchema/getName for the
+ * PostgreSQL JSONB model adapter.
  */
-
 class baseModel {
   constructor() {
-    this.schema = new mongoose.Schema(this.getSchema());
+    this.schema = this.getSchema();
     this.name = this.getName();
-
-    if (this.isNeedAutoIncrement() === true) {
-      this.schema.plugin(autoIncrement.plugin, {
-        model: this.name,
-        field: this.getPrimaryKey(),
-        startAt: 11,
-        incrementBy: yapi.commons.rand(1, 10)
-      });
-    }
-
     this.model = yapi.db(this.name, this.schema);
   }
 
@@ -27,16 +15,10 @@ class baseModel {
     return true;
   }
 
-  /**
-   * 可通过覆盖此方法生成其他自增字段
-   */
   getPrimaryKey() {
     return '_id';
   }
 
-  /**
-   * 获取collection的schema结构
-   */
   getSchema() {
     yapi.commons.log('Model Class need getSchema function', 'error');
   }

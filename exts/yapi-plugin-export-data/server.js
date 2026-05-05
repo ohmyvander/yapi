@@ -1,6 +1,5 @@
 const controller = require('./controller');
 
-// const mongoose = require('mongoose');
 // const _ = require('underscore');
 
 module.exports = function(){

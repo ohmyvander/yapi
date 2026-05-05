@@ -96,6 +96,10 @@ export function fetchCaseList(colId) {
   };
 }
 
+export function fetchInterfaceCaseList(colId) {
+  return fetchCaseList(colId);
+}
+
 export function fetchCaseEnvList(col_id) {
   return {
     type: FETCH_CASE_ENV_LIST,

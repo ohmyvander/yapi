@@ -6,7 +6,8 @@ import {htmlFilter} from '../../common';
 const FETCH_PROJECT_LIST = 'yapi/project/FETCH_PROJECT_LIST';
 const PROJECT_ADD = 'yapi/project/PROJECT_ADD';
 const PROJECT_DEL = 'yapi/project/PROJECT_DEL';
-// const CHANGE_TABLE_LOADING = 'yapi/project/CHANGE_TABLE_LOADING';
+const CHANGE_TABLE_LOADING = 'yapi/project/CHANGE_TABLE_LOADING';
+const CHANGE_UPDATE_MODAL = 'yapi/project/CHANGE_UPDATE_MODAL';
 const PROJECT_UPDATE = 'yapi/project/PROJECT_UPDATE';
 const PROJECT_UPDATE_ENV = 'yapi/project/PROJECT_UPDATE_ENV';
 const PROJECT_UPSET = 'yapi/project/PROJECT_UPSET';
@@ -67,6 +68,19 @@ export default (state = initialState, action) => {
     }
     case PROJECT_DEL: {
       return state;
+    }
+    case CHANGE_TABLE_LOADING: {
+      return {
+        ...state,
+        tableLoading: action.payload
+      };
+    }
+    case CHANGE_UPDATE_MODAL: {
+      return {
+        ...state,
+        isUpdateModalShow: action.payload.isShow,
+        handleUpdateIndex: action.payload.index
+      };
     }
 
     case GET_TOKEN: {
@@ -174,12 +188,19 @@ export function getProjectMemberList(id) {
   };
 }
 
-// export function changeTableLoading(data) {
-//   return {
-//     type: CHANGE_TABLE_LOADING,
-//     payload: data
-//   };
-// }
+export function changeTableLoading(data) {
+  return {
+    type: CHANGE_TABLE_LOADING,
+    payload: data
+  };
+}
+
+export function changeUpdateModal(isShow, index) {
+  return {
+    type: CHANGE_UPDATE_MODAL,
+    payload: { isShow, index }
+  };
+}
 
 export function addProject(data) {
   let {

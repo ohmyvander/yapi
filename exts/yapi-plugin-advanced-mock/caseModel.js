@@ -1,6 +1,5 @@
 const yapi = require('yapi.js');
 const baseModel = require('models/base.js');
-const  mongoose = require('mongoose');
 
 class caseModel extends baseModel {
   getName() {
@@ -20,7 +19,7 @@ class caseModel extends baseModel {
         name: {type: String, required: true},
         value: {type: String}
       }],
-      params: mongoose.Schema.Types.Mixed,
+      params: Object,
       uid: String,
       up_time: Number,
       res_body: {type: String, required: true},

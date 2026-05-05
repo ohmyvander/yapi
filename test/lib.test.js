@@ -49,7 +49,7 @@ test('initPlugins2', t=>{
   }])
 })
 
-test('initPlugins3', t=>{
+test('initPlugins dedupes duplicate plugin names', t=>{
   plugin.__set__("getPluginConfig", function(){
     return {
       server: false,
@@ -65,7 +65,7 @@ test('initPlugins3', t=>{
   }])
 })
 
-test('initPlugins3', t=>{
+test('initPlugins keeps plugin options', t=>{
   plugin.__set__("getPluginConfig", function(){
     return {
       server: false,
@@ -95,7 +95,7 @@ test('initPlugins3', t=>{
   }])
 })
 
-test('initPlugins3', t=>{
+test('initPlugins filters disabled server and client plugins', t=>{
   plugin.__set__("getPluginConfig", function(){
     return {
       server: false,
@@ -136,27 +136,27 @@ test('testJsonEqualBaseString', t=>{
 })
 
 
-test('isDeepMatch', t=>{
+test('isDeepMatch matches direct object subset', t=>{
   t.true(lib.isDeepMatch({a:'aaaaa', b:2}, {a:'aaaaa'}))
 })
 
-test('isDeepMatch', t=>{
+test('isDeepMatch matches nested object subset', t=>{
   t.true(lib.isDeepMatch({a:1, b:2, c: {t:'ttt'}}, {c: {t:'ttt'}}))
 })
 
-test('isDeepMatch', t=>{
+test('isDeepMatch treats undefined expected value as match', t=>{
   t.true(lib.isDeepMatch({}, undefined))
 })
 
-test('isDeepMatch', t=>{
+test('isDeepMatch treats undefined source and empty expected object as match', t=>{
   t.true(lib.isDeepMatch(undefined, {}))
 })
 
-test('isDeepMatch', t=>{
+test('isDeepMatch rejects undefined source for non-empty expected object', t=>{
   t.false(lib.isDeepMatch(undefined, {a:1}))
 })
 
-test('isDeepMatch', t=>{
+test('isDeepMatch compares numeric-like values loosely', t=>{
   t.true(lib.isDeepMatch({ t: 1,
     b: '2',
     ip: '127.0.0.1',
@@ -167,14 +167,14 @@ test('isDeepMatch', t=>{
     code: 1 }, {t:'1'}))
 })
 
-test('isDeepMatch', t=>{
+test('isDeepMatch matches arrays deeply', t=>{
     t.true(lib.isDeepMatch({ t:[{a: 1}]}, { t:[{a: 1}]}))
   })
 
-  test('isDeepMatch', t=>{
+  test('isDeepMatch rejects partial array object matches', t=>{
     t.false(lib.isDeepMatch({ t:[{a: 1, b: 12}]}, { t:[{a: 1}]}))
   })
 
-  test('isDeepMatch', t=>{
+  test('isDeepMatch matches root arrays', t=>{
     t.true(lib.isDeepMatch([{a: 1}], [{a: 1}]))
   })

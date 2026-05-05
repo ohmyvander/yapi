@@ -8,7 +8,6 @@ const axios = require('axios');
 const qs = require('qs');
 const CryptoJS = require('crypto-js');
 const jsrsasign = require('jsrsasign');
-const https = require('https');
 
 const isNode = typeof global == 'object' && global.global === global;
 const ContentTypeMap = {
@@ -51,7 +50,16 @@ const getStorage = async (id)=>{
   }
 }
 
+function requireNodeModule(name) {
+  if (!isNode) {
+    return null;
+  }
+  return eval('require')(name);
+}
+
 async function httpRequestByNode(options) {
+  const https = requireNodeModule('https');
+
   function handleRes(response) {
     if (!response || typeof response !== 'object') {
       return {
@@ -176,7 +184,7 @@ function handleCurrDomain(domains, case_env) {
 }
 
 function sandboxByNode(sandbox = {}, script) {
-  const vm = require('vm');
+  const vm = requireNodeModule('vm');
   script = new vm.Script(script);
   const context = new vm.createContext(sandbox);
   script.runInContext(context, {
@@ -302,7 +310,7 @@ async function crossRequest(defaultOptions, preScript, afterScript, commonContex
 
   let scriptEnable = false;
   try {
-    const yapi = require('../server/yapi');
+    const yapi = requireNodeModule('../server/yapi');
     scriptEnable = yapi.WEBCONFIG.scriptEnable === true;
   } catch (err) {}
 

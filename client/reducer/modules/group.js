@@ -126,6 +126,10 @@ export function updateGroupList(param) {
   };
 }
 
+export function setGroupList(param) {
+  return updateGroupList(param);
+}
+
 // 删除分组
 export function deleteGroup(param) {
   return {

@@ -1,9 +1,7 @@
-const fs = require('fs-extra');
 const yapi = require('../../server/yapi.js');
 const commons = require('../../server/utils/commons');
 const dbModule = require('../../server/utils/db.js');
-const userModel = require('../../server/models/user.js');
-const mongoose = require('mongoose');
+const statisModel = require('./statisMockModel.js');
 
 yapi.commons = commons;
 yapi.connect = dbModule.connect();
@@ -37,15 +35,10 @@ function run() {
   };
 
   yapi.connect
-    .then(function() {
-      let logCol = mongoose.connection.db.collection('statis_mock');
-      let arr = [];
+    .then(async function() {
+      const statisInst = yapi.getInst(statisModel);
       for (let i = 0; i < 11; i++) {
-        if (arr.length >= 5) {
-          logCol.insert(arr);
-          arr = [];
-        }
-        arr.push(data(i));
+        await statisInst.save(data(i));
       }
     })
     .catch(function(err) {

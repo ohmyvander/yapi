@@ -1,7 +1,10 @@
 const path = require('path');
 const fs = require('fs-extra');
 const nodemailer = require('nodemailer');
-const config = require('../../config.json');
+
+const configPath = path.resolve(__dirname, '../../config.json');
+const fallbackConfigPath = path.resolve(__dirname, '../config_example.json');
+const config = fs.existsSync(configPath) ? require(configPath) : require(fallbackConfigPath);
 
 let insts = new Map();
 let mail;

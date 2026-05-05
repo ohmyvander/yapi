@@ -1,15 +1,7 @@
 const yapi = require('yapi.js');
-const mongoose = require('mongoose');
 const controller = require('./controller');
 
 module.exports = function() {
-  yapi.connect.then(function() {
-    let Col = mongoose.connection.db.collection('wiki');
-    Col.createIndex({
-      project_id: 1
-    });
-  });
-
   this.bindHook('add_router', function(addRouter) {
     addRouter({
       // 获取wiki信息

@@ -1,20 +1,6 @@
 const baseModel = require('./base.js');
-const mongoose = require('mongoose');
 
 class stroageModel extends baseModel {
-  constructor() {
-    super()
-    let storageCol = mongoose.connection.db.collection('storage');
-    storageCol.createIndex(
-      {
-        key: 1
-      },
-      {
-        unique: true
-      }
-    );
-  }
-
   getName() {
     return 'storage';
   }
@@ -40,7 +26,7 @@ class stroageModel extends baseModel {
     }
     return this.model.updateOne({
       key
-    }, saveData)
+    }, saveData, { upsert: true })
   }
 
   del(key) {

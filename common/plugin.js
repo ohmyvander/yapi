@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 function getPluginConfig(name, type) {
   let pluginConfig;
   if (type === 'ext') {
@@ -50,5 +48,12 @@ exports.initPlugins = function (plugins, type) {
     return item.enable === true && (item.server || item.client)
   })
 
-  return _.uniq(plugins, item => item.name)
+  const names = {};
+  return plugins.filter(item => {
+    if (names[item.name]) {
+      return false;
+    }
+    names[item.name] = true;
+    return true;
+  })
 }

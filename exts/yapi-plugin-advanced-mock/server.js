@@ -2,7 +2,6 @@ const controller = require('./controller');
 const advModel = require('./advMockModel.js');
 const caseModel = require('./caseModel.js');
 const yapi = require('yapi.js');
-const mongoose = require('mongoose');
 const _ = require('underscore');
 const path = require('path');
 const lib = require(path.resolve(yapi.WEBROOT, 'common/lib.js'));
@@ -20,24 +19,6 @@ function arrToObj(arr) {
 }
 
 module.exports = function() {
-  yapi.connect.then(function() {
-    let Col = mongoose.connection.db.collection('adv_mock');
-    Col.createIndex({
-      interface_id: 1
-    });
-    Col.createIndex({
-      project_id: 1
-    });
-
-    let caseCol = mongoose.connection.db.collection('adv_mock_case');
-    caseCol.createIndex({
-      interface_id: 1
-    });
-    caseCol.createIndex({
-      project_id: 1
-    });
-  });
-
   async function checkCase(ctx, interfaceId) {
     let reqParams = Object.assign({}, ctx.query, ctx.request.body);
     let caseInst = yapi.getInst(caseModel);
