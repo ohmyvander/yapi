@@ -21,6 +21,7 @@ const TabPane = Tabs.TabPane;
 
 require('common/tui-editor/dist/tui-editor.min.css'); // editor ui
 require('common/tui-editor/dist/tui-editor-contents.min.css'); // editor content
+require('json-schema-editor-visual/dist/main.css');
 require('./editor.css');
 
 

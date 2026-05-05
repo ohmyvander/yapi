@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import run from './run';
 
-module.exports = function() {
+export default function() {
   this.bindHook('import_data', function(importDataModule) {
     if (!importDataModule || typeof importDataModule !== 'object') {
       console.error('importDataModule 参数Must be Object Type');

@@ -23,6 +23,6 @@ function exportData(exportDataModule, pid) {
   // }
 }
 
-module.exports = function() {
+export default function() {
   this.bindHook('export_data', exportData);
 };

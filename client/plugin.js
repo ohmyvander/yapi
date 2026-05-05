@@ -299,8 +299,10 @@ try {
 
 Object.keys(pluginModuleList).forEach(plugin => {
   if (!pluginModuleList[plugin]) return null;
-  if (pluginModuleList[plugin] && typeof pluginModuleList[plugin].module === 'function') {
-    pluginModuleList[plugin].module.call(pluginModule, pluginModuleList[plugin].options);
+  const pluginEntry = pluginModuleList[plugin];
+  const pluginClient = pluginEntry.module && (pluginEntry.module.default || pluginEntry.module);
+  if (typeof pluginClient === 'function') {
+    pluginClient.call(pluginModule, pluginEntry.options);
   }
 });
 

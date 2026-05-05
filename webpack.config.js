@@ -147,7 +147,14 @@ module.exports = (env, argv) => {
       alias: {
         client: path.resolve(rootDir, 'client'),
         common: path.resolve(rootDir, 'common'),
-        exts: path.resolve(rootDir, 'exts')
+        exts: path.resolve(rootDir, 'exts'),
+        'json-schema-editor-visual$': path.resolve(
+          rootDir,
+          'node_modules',
+          'json-schema-editor-visual',
+          'dist',
+          'main.js'
+        )
       },
       modules: [path.resolve(rootDir, 'client'), path.resolve(rootDir), 'node_modules'],
       fallback: {
@@ -171,8 +178,8 @@ module.exports = (env, argv) => {
           test: /\.(js|jsx)$/,
           exclude: modulePath => {
             const pluginAllowList = isWin
-              ? /node_modules\\(?!_?(yapi-plugin|json-schema-editor-visual))/
-              : /node_modules\/(?!_?(yapi-plugin|json-schema-editor-visual))/;
+              ? /node_modules\\(?!_?yapi-plugin)/
+              : /node_modules\/(?!_?yapi-plugin)/;
             return /tui-editor|google-diff\.js/.test(modulePath) || pluginAllowList.test(modulePath);
           },
           use: {

@@ -1,7 +1,7 @@
 import WikiPage from './wikiPage/index';
 // const WikiPage = require('./wikiPage/index')
 
-module.exports = function() {
+export default function() {
   this.bindHook('sub_nav', function(app) {
     app.wiki = {
       name: 'Wiki',

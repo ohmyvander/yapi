@@ -34,6 +34,6 @@ function importData(importDataModule) {
   };
 }
 
-module.exports = function() {
+export default function() {
   this.bindHook('import_data', importData);
 };

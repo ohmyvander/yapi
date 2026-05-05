@@ -7,6 +7,6 @@ function genServices(routers) {
   }
 }
 
-module.exports = function() {
+export default function() {
   this.bindHook('sub_setting_nav', genServices);
 };

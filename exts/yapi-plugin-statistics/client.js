@@ -3,7 +3,7 @@
  */
 import StatisticsPage from './statisticsClientPage/index'
 
-module.exports = function () {
+export default function () {
   this.bindHook('header_menu', function (menu) {
     menu.statisticsPage = {
       path: '/statistic',
