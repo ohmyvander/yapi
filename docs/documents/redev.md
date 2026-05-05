@@ -88,7 +88,6 @@ npm run dev
     |-- static
     |-- test
     |-- yapi-base-flow.jpg
-    `-- ydocfile.js
 ```
 
 

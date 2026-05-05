@@ -60,7 +60,6 @@ node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置
     |-- static
     |-- test
     |-- yapi-base-flow.jpg
-    `-- ydocfile.js
 ```
 
 ## 服务器管理

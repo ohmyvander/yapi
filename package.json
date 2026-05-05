@@ -13,8 +13,7 @@
     "test": "ava --node-arguments=\"--require=./test/babel-register.js\"",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "build-client": "npm --prefix client run build",
-    "npm-publish": "node ./npm-publish.js",
-    "docs": "ydoc build"
+    "npm-publish": "node ./npm-publish.js"
   },
   "scripts-info": {
     "start": "运行生产环境服务器",
@@ -87,11 +86,9 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-react": "^7.1.0",
     "ghooks": "^2.0.0",
-    "markdown-it-include": "^1.0.0",
     "nodemon": "^1.11.0",
     "rewire": "^2.5.2",
-    "validate-commit-msg": "^2.12.2",
-    "ydoc-plugin-img-view": "^1.0.1"
+    "validate-commit-msg": "^2.12.2"
   },
   "config": {
     "ghooks": {
