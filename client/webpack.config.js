@@ -1,11 +1,15 @@
 const path = require('path');
+const fs = require('fs');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const packageInfo = require('./package.json');
-const yapi = require('./server/yapi');
 
-const rootDir = __dirname;
+const clientDir = __dirname;
+const rootDir = path.resolve(clientDir, '..');
+const packageInfo = require(path.join(rootDir, 'package.json'));
+const configPath = path.resolve(rootDir, '..', 'config.json');
+const fallbackConfigPath = path.resolve(rootDir, 'config_example.json');
+const webConfig = fs.existsSync(configPath) ? require(configPath) : require(fallbackConfigPath);
 const isWin = require('os').platform() === 'win32';
 
 class WebpackAssetsPlugin {
@@ -64,6 +68,58 @@ const vendorGroups = {
   lib2: ['brace', 'json5', 'url', 'axios'],
   lib3: ['mockjs', 'moment', 'recharts']
 };
+
+const clientPackageAliasNames = [
+  '@babel/runtime',
+  'ajv',
+  'ajv-i18n',
+  'antd',
+  'axios',
+  'brace',
+  'buffer',
+  'compare-versions',
+  'copy-to-clipboard',
+  'core-decorators',
+  'crypto-js',
+  'generate-schema',
+  'immer',
+  'js-base64',
+  'json5',
+  'jsondiffpatch',
+  'jsrsasign',
+  'md5',
+  'mockjs',
+  'moment',
+  'prop-types',
+  'qs',
+  'react',
+  'react-dnd',
+  'react-dnd-html5-backend',
+  'react-dom',
+  'react-redux',
+  'react-router',
+  'react-router-dom',
+  'reactabular-dnd',
+  'reactabular-table',
+  'recharts',
+  'redux',
+  'redux-devtools',
+  'redux-devtools-dock-monitor',
+  'redux-devtools-log-monitor',
+  'redux-promise',
+  'sha.js',
+  'swagger-client',
+  'table-resolver',
+  'underscore',
+  'yapi-plugin-qsso'
+];
+
+function createClientPackageAliases() {
+  return clientPackageAliasNames.reduce((aliases, packageName) => {
+    aliases[packageName] = path.resolve(clientDir, 'node_modules', ...packageName.split('/'));
+    return aliases;
+  }, {});
+}
 
 function moduleMatchesPackages(module, packages) {
   const resource = module.nameForCondition && module.nameForCondition();
@@ -130,7 +186,7 @@ module.exports = (env, argv) => {
   const cssFilename = isProd ? '[name]@[contenthash:12].css' : '[name]@dev.css';
 
   return {
-    context: path.resolve(rootDir, 'client'),
+    context: clientDir,
     entry: {
       index: './index.js'
     },
@@ -144,19 +200,19 @@ module.exports = (env, argv) => {
     devtool: isProd ? false : 'cheap-module-source-map',
     resolve: {
       extensions: ['.js', '.jsx', '.json'],
-      alias: {
-        client: path.resolve(rootDir, 'client'),
+      alias: Object.assign(createClientPackageAliases(), {
+        client: clientDir,
         common: path.resolve(rootDir, 'common'),
         exts: path.resolve(rootDir, 'exts'),
         'json-schema-editor-visual$': path.resolve(
-          rootDir,
+          clientDir,
           'node_modules',
           'json-schema-editor-visual',
           'dist',
           'main.js'
         )
-      },
-      modules: [path.resolve(rootDir, 'client'), path.resolve(rootDir), 'node_modules'],
+      }),
+      modules: ['node_modules', clientDir, path.resolve(rootDir), path.resolve(clientDir, 'node_modules')],
       fallback: {
         assert: false,
         child_process: false,
@@ -250,7 +306,7 @@ module.exports = (env, argv) => {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(isProd ? 'production' : 'dev'),
         'process.env.version': JSON.stringify(packageInfo.version),
-        'process.env.versionNotify': JSON.stringify(yapi.WEBCONFIG.versionNotify)
+        'process.env.versionNotify': JSON.stringify(webConfig.versionNotify)
       }),
       new MiniCssExtractPlugin({
         filename: cssFilename,

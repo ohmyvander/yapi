@@ -76,8 +76,9 @@ npm run dev
     |-- README.md
     |-- client
     |-- common
+    |-- client
     |-- config_example.json
-    |-- doc
+    |-- docs
     |-- exts
     |-- nodemon.json
     |-- npm-debug.log
@@ -86,10 +87,8 @@ npm run dev
     |-- server
     |-- static
     |-- test
-    |-- webpack.alias.js
     |-- yapi-base-flow.jpg
-    |-- ydocfile.js
-    `-- ykit.config.js
+    `-- ydocfile.js
 ```
 
 

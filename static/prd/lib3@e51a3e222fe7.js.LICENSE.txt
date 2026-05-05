@@ -4,6 +4,8 @@
 	    墨智 mozhi.gyy@taobao.com nuysoft@gmail.com
 	*/
 
-//! moment.js
-
-//! moment.js locale configuration
+/*!
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/

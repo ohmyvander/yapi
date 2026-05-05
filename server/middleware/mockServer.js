@@ -5,7 +5,7 @@ const mockExtra = require('../../common/mock-extra.js');
 const { schemaValidator } = require('../../common/utils.js');
 const _ = require('underscore');
 const Mock = require('mockjs');
-const variable = require('../../client/constants/variable.js')
+const variable = require('../../common/constants/variable.js')
 /**
  *
  * @param {*} apiPath /user/tom

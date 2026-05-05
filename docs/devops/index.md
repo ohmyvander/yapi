@@ -48,8 +48,9 @@ node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置
     |-- README.md
     |-- client
     |-- common
+    |-- client
     |-- config_example.json
-    |-- doc
+    |-- docs
     |-- exts
     |-- nodemon.json
     |-- npm-debug.log
@@ -58,10 +59,8 @@ node server/app.js //启动服务器后，请访问 127.0.0.1:{config.json配置
     |-- server
     |-- static
     |-- test
-    |-- webpack.alias.js
     |-- yapi-base-flow.jpg
-    |-- ydocfile.js
-    `-- ykit.config.js
+    `-- ydocfile.js
 ```
 
 ## 服务器管理
