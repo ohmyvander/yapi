@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import URL from 'url';
+import { parseUrl as parseUrlWithWhatwg } from '../../common/url.js';
 import _ from 'underscore';
 const GenerateSchema = require('generate-schema/src/schemas/json.js');
 import { json_parse } from '../../common/utils.js';
@@ -8,7 +8,7 @@ function postman(importDataModule) {
   var folders = [];
 
   function parseUrl(url) {
-    return URL.parse(url);
+    return parseUrlWithWhatwg(url);
   }
 
   function checkInterRepeat(interData) {

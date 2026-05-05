@@ -1,7 +1,7 @@
 const { isJson5, json_parse, handleJson, joinPath, safeArray } = require('./utils');
 const constants = require('../client/constants/variable.js');
 const _ = require('underscore');
-const URL = require('url');
+const { parseUrl, formatUrl } = require('./url.js');
 const utils = require('./power-string.js').utils;
 const HTTP_METHOD = constants.HTTP_METHOD;
 const axios = require('axios');
@@ -256,7 +256,7 @@ function sandboxByBrowser(context = {}, script) {
 async function crossRequest(defaultOptions, preScript, afterScript, commonContext = {}) {
   let options = Object.assign({}, defaultOptions);
   const taskId = options.taskId || Math.random() + '';
-  let urlObj = URL.parse(options.url, true),
+  let urlObj = parseUrl(options.url, true),
     query = {};
   query = Object.assign(query, urlObj.query);
   let context = {
@@ -316,7 +316,7 @@ async function crossRequest(defaultOptions, preScript, afterScript, commonContex
 
   if (preScript && scriptEnable) {
     context = await sandbox(context, preScript);
-    defaultOptions.url = options.url = URL.format({
+    defaultOptions.url = options.url = formatUrl({
       protocol: urlObj.protocol,
       host: urlObj.host,
       query: context.query,
@@ -411,8 +411,8 @@ function handleParams(interfaceData, handleValue, requestParams) {
     path = path.replace(`{${item.name}}`, val || `{${item.name}}`);
   });
 
-  const urlObj = URL.parse(joinPath(currDomain.domain, path), true);
-  const url = URL.format({
+  const urlObj = parseUrl(joinPath(currDomain.domain, path), true);
+  const url = formatUrl({
     protocol: urlObj.protocol || 'http',
     host: urlObj.host,
     pathname: urlObj.pathname,

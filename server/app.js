@@ -1,5 +1,6 @@
 process.env.NODE_PATH = __dirname;
 require('module').Module._initPaths();
+require('./utils/nodeCompat').applyNodeCompat();
 
 const yapi = require('./yapi.js');
 const commons = require('./utils/commons');
@@ -39,7 +40,7 @@ function createApp(options) {
 
   app.use(
     koaBody({
-      strict: false,
+      parsedMethods: ['POST', 'PUT', 'PATCH', 'GET', 'HEAD', 'DELETE'],
       multipart: true,
       jsonLimit: '2mb',
       formLimit: '1mb',

@@ -4,7 +4,7 @@ const interfaceCaseModel = require('../models/interfaceCase.js');
 const followModel = require('../models/follow.js');
 const groupModel = require('../models/group.js');
 const _ = require('underscore');
-const url = require('url');
+const { parseUrl } = require('../../common/url.js');
 const baseController = require('./base.js');
 const yapi = require('../yapi.js');
 const userModel = require('../models/user.js');
@@ -217,7 +217,7 @@ class interfaceController extends baseController {
     params.method = params.method.toUpperCase();
     params.req_params = params.req_params || [];
     params.res_body_type = params.res_body_type ? params.res_body_type.toLowerCase() : 'json';
-    let http_path = url.parse(params.path, true);
+    let http_path = parseUrl(params.path, true);
 
     if (!yapi.commons.verifyPath(http_path.pathname)) {
       return (ctx.body = yapi.commons.resReturn(
@@ -341,7 +341,7 @@ class interfaceController extends baseController {
     params.method = params.method || 'GET';
     params.method = params.method.toUpperCase();
 
-    let http_path = url.parse(params.path, true);
+    let http_path = parseUrl(params.path, true);
 
     if (!yapi.commons.verifyPath(http_path.pathname)) {
       return (ctx.body = yapi.commons.resReturn(
@@ -701,7 +701,7 @@ class interfaceController extends baseController {
 
     if (params.path) {
       let http_path;
-      http_path = url.parse(params.path, true);
+      http_path = parseUrl(params.path, true);
 
       if (!yapi.commons.verifyPath(http_path.pathname)) {
         return (ctx.body = yapi.commons.resReturn(

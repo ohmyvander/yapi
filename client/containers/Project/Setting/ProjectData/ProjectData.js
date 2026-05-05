@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import './ProjectData.scss';
 import axios from 'axios';
 
-import URL from 'url';
+import { parseUrl, formatUrl } from 'common/url.js';
 
 const Dragger = Upload.Dragger;
 import { saveImportData } from '../../../../reducer/modules/interface';
@@ -35,10 +35,10 @@ function handleExportRouteParams(url, status, isWiki) {
   if (!url) {
     return;
   }
-  let urlObj = URL.parse(url, true),
+  let urlObj = parseUrl(url, true),
     query = {};
   query = Object.assign(query, urlObj.query, { status, isWiki });
-  return URL.format({
+  return formatUrl({
     pathname: urlObj.pathname,
     query
   });
